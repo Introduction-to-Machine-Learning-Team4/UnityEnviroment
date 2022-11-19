@@ -2,11 +2,11 @@
 EXE is under Execuatable folder
 
 ## Document
-More Document about MLagent is at https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Readme.md
+More Document about MLagent is at https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Readme.md <br\>
 Useful Doc:
 - [API Docs/Python API Documentation](https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Python-API-Documentation.md)
 - [API Docs/How to use the Python API](https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Python-API.md)
-- [Python Tutorial with Google Colab/Using a UnityEnvironment] (https://colab.research.google.com/github/Unity-Technologies/ml-agents/blob/release_19_docs/colab/Colab_UnityEnvironment_1_Run.ipynb)
+- [Python Tutorial with Google Colab/Using a UnityEnvironment](https://colab.research.google.com/github/Unity-Technologies/ml-agents/blob/release_19_docs/colab/Colab_UnityEnvironment_1_Run.ipynb)
 - [Python Tutorial with Google Colab/Q-Learning with a UnityEnvironment](https://colab.research.google.com/github/Unity-Technologies/ml-agents/blob/release_19_docs/colab/Colab_UnityEnvironment_2_Train.ipynb) 
 
 ## Installation
