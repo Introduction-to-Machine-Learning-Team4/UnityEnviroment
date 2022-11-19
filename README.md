@@ -2,7 +2,7 @@
 EXE is under Execuatable folder
 
 ## Document
-More Document about MLagent is at https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Readme.md <br\>
+More Document about MLagent is at https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Readme.md <br />
 Useful Doc:
 - [API Docs/Python API Documentation](https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Python-API-Documentation.md)
 - [API Docs/How to use the Python API](https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Python-API.md)
