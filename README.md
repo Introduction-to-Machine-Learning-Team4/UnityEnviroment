@@ -1,60 +1,52 @@
-# Crossy Road EX
+## CrossyRoad 
 
-**Crossy Road EX** is an implementation of the classic game [*Crossy Road*](https://play.google.com/store/apps/details?id=com.yodo1.crossyroad&hl=en_US) built in [Unity](https://unity3d.com/). *Crossy Road* is an arcade video game released on 20 November 2014. It was developed and published by Hipster Whale, with the name and concept of the game playing on the joke "Why did the chicken cross the road?" The game has been described as "endless Frogger."
+EXE is under Execuatable folder
 
-> More information about [Unity](https://unity3d.com/)
+## Installation
 
-* [How to install Unity IDE?](https://store.unity.com/?_ga=2.265725839.1060669429.1552211594-647567507.1552211594)
-
----
-## Execution
-
-> **NOTICE:** Make sure you have already installed Unity on your machine.
-
-1. Open this repository in your Unity IDE first
-2. Execution in the Unity IDE
-    * If succed, you will see the picture as follow
-        * Click "Play" to start the game
-        ![](https://i.imgur.com/qUA6SBl.png)
-    * In "Option", you will see some settings as follow
-        ![](https://i.imgur.com/1hPeKYo.png)
-    * In "Play", you will see the picture as follow. Click any key to play!
-        ![](https://i.imgur.com/GjkTKQs.png)
-        ![](https://i.imgur.com/KeyPr5u.png)
-    * Game over
-        ![](https://i.imgur.com/X18eExN.png)
-
-### Run with execution file
-
-We have already built the execution for Windows and Ubuntu Linux. You can also run the execution file respectively in the folder [`Main/`](Main/).
-
+1. create an enviroment with **Python 3.6 or 3.7**
+2. Install the pytorch from https://pytorch.org/get-started/locally/
+3. Install the mlagent with pip
 ```
-Main/
-|--- Ubuntu/
-    |--- CrossyRoadEX_Data/
-    |--- CrossyRoadEX.x86_64        # Click this file to run the game!
-|--- Windows/
-    |--- CrossyRoadEX_Data/
-    |--- MonoBleedingEdge/
-    |--- CrossyRoadEX.exe
-    |--- UnityCrashJandler64.exe    # Click this file to run the game!
-    |--- UnityPlayer.dll
-    |--- WinPixEventRuntime.dll
+python -m pip install mlagents==0.28.0
 ```
+4. Install importlib-metadata
+```
+pip install importlib-metadata==4.4
+```
+More Installation Detail at https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Installation.md
 
----
-## Logs
+## Usage (Command Line)
+Run the MLAgent Default Model(PPO/SAC) by Anaconda command prompt under the folder with exe
+```
+mlagents-learn <config path> --env=<exe name> --run-id=<run_name>
+```
+It should be like
+```
+mlagents-learn config\player_config.yaml --env="CRML" --run-id=test
+```
+## Usage (Python)
+To load a Unity environment from a built binary file, put the file in the same directory
+as enviroment(exe), run:
+```python
+from mlagents_envs.environment import UnityEnvironment
+# This is a non-blocking call that only loads the environment.
+env = UnityEnvironment(file_name="CRML", seed=1, side_channels=[])
+# Start interacting with the environment.
+env.reset()
+behavior_names = env.behavior_specs.keys()
+...
+```
+more Details at https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Python-API.md
 
-* MAR 11, 2019 - Build and test on [Unity 2018.3.8f1 (64-bit)](https://unity3d.com/get-unity/download/archive)
+## Action Space
 
----
-## Author
+0: No Movement
+1: Front
+2: Back
+3: Left
+4: Right
 
-> **NOTICE:** You can follow the contributing process [CONTRIBUTING.md](CONTRIBUTING.md) to join me. I am very welcome any issue!
+## Observation Space
 
-* [David Lu](https://github.com/yungshenglu)
-
----
-## License
-
-[GNU GENERAL PUBLIC LICENSE Version 3](LICENSE)
+size 3: Player Coordinate
