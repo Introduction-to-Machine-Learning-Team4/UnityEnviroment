@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Collections;
 using UnityEngine.UI;
-using System.IO;
 
 public class GameStateControllerScript : MonoBehaviour {
     public PlayerMovementScript PMScript;
@@ -24,11 +21,9 @@ public class GameStateControllerScript : MonoBehaviour {
     private GameObject currentCanvas;
     private string state;
 
-    public string filename = "top.txt";
 
     public void Start() {
         currentCanvas = null;
-        //MainMenu();
         PMScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementScript>();
         PMScript.OnGameOver += GameOver;
         Play();

@@ -63,4 +63,9 @@ public class TrunkGeneratorScript : MonoBehaviour {
             Destroy(trunks[i]);
         }
     }
+
+    public List<GameObject> GetObjectsList()
+    {
+        return trunks;
+    }
 }

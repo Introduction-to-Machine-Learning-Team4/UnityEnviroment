@@ -62,4 +62,9 @@ public class RoadCarGenerator : MonoBehaviour {
             Destroy(o);
         }
     }
+
+    public List<GameObject> GetObjectsList()
+    {
+        return cars;
+    }
 }

@@ -30,10 +30,14 @@ public class PlayerMovementScript : MonoBehaviour {
 
     private GameStateControllerScript gameStateController;
     private int score;
-    public event Action OnGameOver;
+
 
     private float st = 0f;
     private float input_delay = 0.1f;
+
+    public event Action OnDecision;
+    public event Action OnGameOver;
+
     public void Start() {
         current = transform.position;
         moving = false;
@@ -56,6 +60,8 @@ public class PlayerMovementScript : MonoBehaviour {
             current = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), Mathf.Round(transform.position.z));
             //if (canMove && HumanPlay)
             //    KeyboardInput();
+            if (canMove && Time.time - st > input_delay)
+                OnDecision?.Invoke();
         }
 
         score = Mathf.Max(score, (int)current.z);

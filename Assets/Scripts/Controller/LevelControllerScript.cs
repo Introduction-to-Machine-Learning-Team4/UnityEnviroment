@@ -53,6 +53,11 @@ public class LevelControllerScript : MonoBehaviour {
         lineList.RemoveAll(x => remove.Contains(x));
 	}
 
+    public Dictionary<int, GameObject> Lines
+    {
+        get { return lines; }
+    }
+
     public void Reset() {
         foreach (var line in lineList)
             Destroy(line);
