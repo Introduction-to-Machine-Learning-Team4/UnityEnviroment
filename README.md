@@ -47,11 +47,21 @@ behavior_names = env.behavior_specs.keys()
 more Details at https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Python-API.md
 
 ## Action Space
-0: No Movement
-1: Front
-2: Back
-3: Left
-4: Right
+Continuous Action: 0 <br />
+Discrete Action: 1 <br />
+- Branch size: 5 <br />
+0: No Movement/1: Front/2: Back/3: Left/4: Right
 
 ## Observation Space
-size 3: Player Coordinate
+Total size: 60 <br />
+30 feature obsered and with 2 stacked vector.
+- size 2: Player Coordinate(X,Z)
+- size 4: The type of line which relative to player(previous,current,next two)<br />
+type 0: Grass, 1: Road, 2: Water
+- size 2: The Obstacles Coordinate(X,Z)<br />
+3 obstacle observed per line. 6 feature per line. Total 24 feature.
+
+## Changelogs
+- v2.0: Observation size now change to 60.<br/>
+add Player coordinate, Line type, Obstacle coordinate to observation
+- v1.0: Executable Create. Observation space size = 3
