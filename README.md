@@ -62,6 +62,7 @@ type 0: Grass, 1: Road, 2: Water
 3 obstacle observed per line. 6 feature per line. Total 24 feature.
 
 ## Changelogs
+- v2.1: Reward should add correctly when beating the high score
 - v2.0: Observation size now change to 60.<br/>
 add Player coordinate, Line type, Obstacle coordinate to observation
 - v1.0: Executable Create. Observation space size = 3
