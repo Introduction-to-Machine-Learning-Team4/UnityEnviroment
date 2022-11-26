@@ -70,7 +70,7 @@ public class PlayerAgent : Agent
             }
             else
             {
-                sensor.AddObservation(0);
+                sensor.AddObservation(-1);
                 ObjectsObservation(sensor, emptyList);
             }
         }
@@ -103,7 +103,6 @@ public class PlayerAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        //Debug.Log(actions.DiscreteActions[0]);
         var reward = PMScript.ActionHandle(actions.DiscreteActions[0]);
         SetReward(reward);
     }

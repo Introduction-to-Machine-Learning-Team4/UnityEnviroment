@@ -105,8 +105,7 @@ public class PlayerMovementScript : MonoBehaviour {
         float reward = 0f;
         if (IsMoving || !canMove || Time.time - st < input_delay) return 0f;
         reward = InputTransfer(actionIndex);
-        if ((int)current.z > score) return 1f;
-        return 0f;
+        return reward;
     }
 
     /// <summary>
@@ -122,6 +121,7 @@ public class PlayerMovementScript : MonoBehaviour {
         {
             case 1:
                 successCheck = Move(new Vector3(0, 0, 3));
+                if (successCheck == 1 && (int)current.z + 3 > score) reward = 1.0f;
                 break;
             case 2:
                 successCheck = Move(new Vector3(0, 0, -3));
