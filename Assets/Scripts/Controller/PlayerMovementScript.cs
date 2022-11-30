@@ -104,7 +104,7 @@ public class PlayerMovementScript : MonoBehaviour {
     {
         float reward = 0f;
         if (IsMoving || !canMove || Time.time - st < input_delay) return 0f;
-        reward = InputTransfer(actionIndex);
+        InputTransfer(actionIndex);
         return reward;
     }
 

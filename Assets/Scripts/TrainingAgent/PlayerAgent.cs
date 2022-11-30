@@ -31,8 +31,6 @@ public class PlayerAgent : Agent
     {
         if (PMScript != null)
             PlayerObservation(sensor); // 2
-        if (LCScript != null)
-            LevelObservation(sensor); // 28
     }
 
     private void PlayerObservation(VectorSensor sensor)
@@ -41,68 +39,9 @@ public class PlayerAgent : Agent
         sensor.AddObservation(PMScript.transform.position.z);
     }
 
-    private void LevelObservation(VectorSensor sensor)
-    {
-        var LinesDict = LCScript.Lines;
-        var current_z = (int)PMScript.transform.position.z;
-        for(int i = -1; i <= 2; i++) // 7 per loop , total size = 28
-        {
-            var current_line = current_z + i;
-            if (LinesDict.ContainsKey(current_line))
-            {
-                switch (LinesDict[current_z + i].tag)
-                {
-                    case "Road":
-                        sensor.AddObservation(1);
-                        var olist = LinesDict[current_line].GetComponent<RoadCarGenerator>().GetObjectsList();
-                        ObjectsObservation(sensor, olist); // 6
-                        break;
-                    case "Water":
-                        sensor.AddObservation(2);
-                        olist = LinesDict[current_line].GetComponent<TrunkGeneratorScript>().GetObjectsList();
-                        ObjectsObservation(sensor, olist);
-                        break;
-                    case "Grass":
-                        sensor.AddObservation(0);
-                        ObjectsObservation(sensor, emptyList);
-                        break;
-                }
-            }
-            else
-            {
-                sensor.AddObservation(-1);
-                ObjectsObservation(sensor, emptyList);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Add the obstacles to observation.Collect x and z coordinate of object.<br/>
-    /// Pad with -100 if object not exist.<br/>
-    /// Add 3 objects (size = 6) in total
-    /// </summary>
-    /// <param name="sensor"></param>
-    /// <param name="olist"></param>
-    private void ObjectsObservation(VectorSensor sensor,List<GameObject> olist)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            if (j < olist.Count)
-            {
-                Vector3 pos = olist[j].transform.position;
-                sensor.AddObservation(pos.x);
-                sensor.AddObservation(pos.z);
-            }
-            else
-            { 
-                sensor.AddObservation(-100.0f);
-                sensor.AddObservation(-100.0f);
-            }
-        }
-    }
-
     public override void OnActionReceived(ActionBuffers actions)
     {
+        Debug.Log(actions.DiscreteActions[0]);
         var reward = PMScript.ActionHandle(actions.DiscreteActions[0]);
         SetReward(reward);
     }
