@@ -2,22 +2,22 @@
     "Player": {
         "checkpoints": [
             {
-                "steps": 5015,
-                "file_path": "results\\test\\Player\\Player-5015.onnx",
-                "reward": null,
-                "creation_time": 1668590464.986225,
+                "steps": 50018,
+                "file_path": "results\\test\\Player\\Player-50018.onnx",
+                "reward": 1.19192410760288,
+                "creation_time": 1669879446.6067498,
                 "auxillary_file_paths": [
-                    "results\\test\\Player\\Player-5015.pt"
+                    "results\\test\\Player\\Player-50018.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 5015,
+            "steps": 50018,
             "file_path": "results\\test\\Player.onnx",
-            "reward": null,
-            "creation_time": 1668590464.986225,
+            "reward": 1.19192410760288,
+            "creation_time": 1669879446.6067498,
             "auxillary_file_paths": [
-                "results\\test\\Player\\Player-5015.pt"
+                "results\\test\\Player\\Player-50018.pt"
             ]
         }
     },

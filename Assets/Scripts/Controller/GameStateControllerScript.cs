@@ -25,12 +25,10 @@ public class GameStateControllerScript : MonoBehaviour {
     public void Start() {
         currentCanvas = null;
         PMScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementScript>();
-        PMScript.OnGameOver += GameOver;
         Play();
     }
     public void OnDestroy()
     {
-        PMScript.OnGameOver -= GameOver;
     }
 
     public void Update() {
@@ -49,8 +47,7 @@ public class GameStateControllerScript : MonoBehaviour {
         PMScript.canMove = true;
     }
 
-    public void GameOver() {
-        CurrentCanvas = gameOverCanvas;
+    public void ResetGame() {
         state = "gameover";
 
         CMScript.Reset();

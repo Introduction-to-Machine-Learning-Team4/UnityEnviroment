@@ -10,6 +10,20 @@ public class PlayerAgent : Agent
     public GameStateControllerScript GSCScript;
     public LevelControllerScript LCScript;
 
+    [SerializeField]
+    private float maxStayTime = 5.0f;
+    [SerializeField]
+    private float maxResetTime = 30.0f;
+    [SerializeField]
+    private float penaltyRate = 0.0001f;
+    [SerializeField]
+    private float maxPenalty = 0.01f;
+    private float lastUpdateTime = 0.0f;
+
+    private bool startup = false;
+    private float StartUpTime = 15.0f;
+    private float startTime = 0.0f;
+
     private List<GameObject> emptyList;
     void Start()
     {
@@ -25,6 +39,10 @@ public class PlayerAgent : Agent
 
     public override void OnEpisodeBegin()
     {
+        PMScript.canMove = false;
+        GSCScript.ResetGame();
+        startTime = Time.time;
+        startup = false;
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -95,8 +113,8 @@ public class PlayerAgent : Agent
             }
             else
             { 
-                sensor.AddObservation(-100.0f);
-                sensor.AddObservation(-100.0f);
+                sensor.AddObservation(-10.0f + Random.Range(-0.1f,0.1f));
+                sensor.AddObservation(-10.0f + Random.Range(-0.1f,0.1f));
             }
         }
     }
@@ -104,7 +122,40 @@ public class PlayerAgent : Agent
     public override void OnActionReceived(ActionBuffers actions)
     {
         var reward = PMScript.ActionHandle(actions.DiscreteActions[0]);
+
+        var currentStayTime = Time.time - lastUpdateTime;
+        if (!startup)
+        {
+            if (actions.DiscreteActions[0] == 1)
+                reward = 0.1f;
+            else if (actions.DiscreteActions[0] != 0)
+                reward = -0.1f;
+            if (Time.time - startTime > StartUpTime)
+            {
+                startup = true;
+                lastUpdateTime = Time.time;
+            }
+        }
+        else if (reward == 1f)
+        {
+            lastUpdateTime = Time.time; // Reset Timer
+        }
+        else if (currentStayTime > maxStayTime)
+        {
+            reward = -1f * penaltyRate * (currentStayTime - maxStayTime); // Penalty Increase
+            reward = reward < -1f * maxPenalty ? -1f * maxPenalty : reward; // Cap
+        }
+
         SetReward(reward);
+
+        currentStayTime = Time.time - lastUpdateTime; // Update again on startup
+        if (currentStayTime > maxResetTime)
+        {
+            EndEpisode();
+        }
+
+        //Debug.Log(actions.DiscreteActions[0]);
+        //Debug.Log(GetCumulativeReward());
     }
     public override void Heuristic(in ActionBuffers actionsOut)
     {
@@ -133,7 +184,6 @@ public class PlayerAgent : Agent
     {
         SetReward(-1f);
         EndEpisode();
-
     }
 
 

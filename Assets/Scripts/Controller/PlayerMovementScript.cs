@@ -36,7 +36,7 @@ public class PlayerMovementScript : MonoBehaviour {
     private float input_delay = 0.1f;
 
     public event Action OnDecision;
-    public event Action OnGameOver;
+    public Action OnGameOver;
 
     public void Start() {
         current = transform.position;
@@ -124,7 +124,8 @@ public class PlayerMovementScript : MonoBehaviour {
                 if (successCheck == 1 && (int)current.z + 3 > score) reward = 1.0f;
                 break;
             case 2:
-                successCheck = Move(new Vector3(0, 0, -3));
+                if (Mathf.RoundToInt(current.z) > -3.0f)
+                    successCheck = Move(new Vector3(0, 0, -3));
                 break;
             case 3:
                 if (Mathf.RoundToInt(current.x) > minX)
