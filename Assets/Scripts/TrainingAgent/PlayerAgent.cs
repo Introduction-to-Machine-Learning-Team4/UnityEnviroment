@@ -149,7 +149,7 @@ public class PlayerAgent : Agent
         SetReward(reward);
 
         currentStayTime = Time.time - lastUpdateTime; // Update again on startup
-        if (currentStayTime > maxResetTime)
+        if (currentStayTime > maxResetTime && startup)
         {
             EndEpisode();
         }
