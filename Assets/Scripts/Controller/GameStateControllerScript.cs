@@ -20,19 +20,23 @@ public class GameStateControllerScript : MonoBehaviour {
 
     private GameObject currentCanvas;
     private string state;
-
+    public bool isReset { get; private set; }
 
     public void Start() {
+        isReset = false;
         currentCanvas = null;
         PMScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementScript>();
+        PMScript.OnGameOver += ResetGame;
         Play();
     }
     public void OnDestroy()
     {
+        PMScript.OnGameOver -= ResetGame;
     }
 
     public void Update() {
         if (state == "play") {
+            isReset = false;
             topScore.text = PlayerPrefs.GetInt("Top").ToString();
             playScore.text = score.ToString();
             playerName.text = PlayerPrefs.GetString("Name");
@@ -48,6 +52,7 @@ public class GameStateControllerScript : MonoBehaviour {
     }
 
     public void ResetGame() {
+        isReset = true;
         state = "gameover";
 
         CMScript.Reset();

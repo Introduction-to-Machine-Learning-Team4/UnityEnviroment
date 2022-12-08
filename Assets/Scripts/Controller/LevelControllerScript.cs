@@ -3,65 +3,61 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LevelControllerScript : MonoBehaviour {
-    public int minZ = 3;
-    public int lineAhead = 40;
-    public int lineBehind = 20;
+    public int lineAhead = 12;
+    public int lineBehind = 8;
+    private const int unit = 3; // line width = 3
+    private const int offset = 1;
+    private int generated_idx;
 
     public GameObject[] linePrefabs;
-
-    private Dictionary<int, GameObject> lines;
-    private List<GameObject> lineList;
+    public Dictionary<int, GameObject> Lines { get; private set; }
     private GameObject player;
 
     public void Start() {
         player = GameObject.FindGameObjectWithTag("Player");
-        lines = new Dictionary<int, GameObject>();
-        lineList = new List<GameObject>();
-	}
+        Lines = new Dictionary<int, GameObject>();
+        generated_idx = 1;
+    }
 	
     public void Update() {
         // Generate lines based on player position.
-        var playerZ = (int)player.transform.position.z;
-        for (var z = Mathf.Max(minZ, playerZ - lineBehind); z <= playerZ + lineAhead; z += 1) {
-            if (!lines.ContainsKey(z)) {
-
-                var line = Instantiate(
-                    linePrefabs[Random.Range(0, linePrefabs.Length)],
-                    new Vector3(0, 0, z * 3 - 5), 
-                    Quaternion.identity
-                );
-
-                line.transform.localScale = new Vector3(1, 1, 3);
-                lines.Add(z, line);
-                lineList.Add(line);
-            }
+        var current_idx = (int)player.transform.position.z/unit;
+        while (generated_idx <= current_idx + lineAhead)
+        {
+            var line = Instantiate(
+                linePrefabs[Random.Range(0, linePrefabs.Length)],
+                new Vector3(0, 0, generated_idx * unit + offset),
+                Quaternion.identity
+            );
+            line.transform.localScale = new Vector3(1, 1, 3);
+            Lines.Add(generated_idx, line);
+            generated_idx ++ ;
         }
 
         // Remove lines based on player position.
-        List<GameObject> remove = new List<GameObject>();
-        foreach(var line in lineList)
+
+        List<int> remove_keys = new List<int>();
+        foreach (var line in Lines)
         {
-            if (line == null) continue;
-            var lineZ = line.transform.position.z;
-            if (lineZ < playerZ - lineBehind)
+            if( line.Key < current_idx - lineBehind)
             {
-                Destroy(line);
-                remove.Add(line);
-                lines.Remove((int)lineZ);
+                Destroy(line.Value);
+                remove_keys.Add(line.Key);
             }
         }
-        lineList.RemoveAll(x => remove.Contains(x));
+        foreach(var key in remove_keys)
+        {
+            Lines.Remove(key);
+        }
+
 	}
 
-    public Dictionary<int, GameObject> Lines
-    {
-        get { return lines; }
-    }
-
     public void Reset() {
-        foreach (var line in lineList)
+        foreach (var line in Lines.Values)
+        {
             Destroy(line);
-        lineList = new List<GameObject>();
-        lines = new Dictionary<int, GameObject>();
+        }
+        Lines = new Dictionary<int, GameObject>();
+        generated_idx = 1;
     }
 }

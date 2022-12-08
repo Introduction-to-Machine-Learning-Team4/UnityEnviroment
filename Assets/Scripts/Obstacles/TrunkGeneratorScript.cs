@@ -24,7 +24,7 @@ public class TrunkGeneratorScript : MonoBehaviour {
 	    if (randomizeValues) {
             direction = Random.value < 0.5f ? Direction.Left : Direction.Right;
             speed = Random.Range(2.0f, 4.0f);
-            length = Random.Range(1, 4);
+            length = Random.Range(1.5f, 4.0f);
             interval = length / speed + Random.Range(2.0f, 4.0f);
         }
 
