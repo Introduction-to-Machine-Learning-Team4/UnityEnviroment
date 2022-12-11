@@ -19,6 +19,8 @@ public class PlayerAgent : Agent
     private float penaltyRate = 0.0001f;
     [SerializeField]
     private float maxPenalty = 0.01f;
+    private float DeathPenalty = 0.5f;
+
     private float lastUpdateTime = 0.0f;
 
     private bool startup = false;
@@ -52,11 +54,11 @@ public class PlayerAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // total 93
+        // total 67
         if (PMScript != null)
             PlayerObservation(sensor); // 2
         if (LCScript != null)
-            LevelObservation(sensor); // 91
+            LevelObservation(sensor); // 65
 
         //string s = "(";
         //foreach (var i in sensor.GetObservations())
@@ -80,7 +82,7 @@ public class PlayerAgent : Agent
         var LinesDict = LCScript.Lines;
         var start_line = (int)PMScript.transform.position.z / 3;
         string s = "(";
-        for (int i = -2; i <= 4; i++) // 13 per loop , total size = 91
+        for (int i = -1; i <= 3; i++) // 13 per loop
         {
             int current_line = start_line + i;
             if (LinesDict.ContainsKey(current_line))
@@ -126,25 +128,25 @@ public class PlayerAgent : Agent
     /// <param name="olist"></param>
     private void ObjectsObservation(VectorSensor sensor,List<GameObject> olist,int LineType)
     {
-        float pad;
+        float pad = -10.0f;
         float obj_type;
         switch(LineType)
         {
             case 0:
                 obj_type = 0;
-                pad = -10.0f;
+                //pad = -10.0f;
                 break;
             case 1:
                 obj_type = 1;
-                pad = -20.0f;
+                //pad = -20.0f;
                 break;
             case 2:
                 obj_type = 2;
-                pad = -30.0f;
+                //pad = -30.0f;
                 break;
             default:
                 obj_type = 0;
-                pad = -100.0f;
+                //pad = -100.0f;
                 break;
         }
         for (int j = 0; j < 3; j++) // 4 per loop, total 12
@@ -269,8 +271,9 @@ public class PlayerAgent : Agent
     // Listener
     private void GameOver()
     {
-            SetReward(-1f);
-            EndEpisode();
+        if (DeathPenalty > 0.0f) DeathPenalty *= -1.0f;
+        SetReward(DeathPenalty);
+        EndEpisode();
     }
 
 }

@@ -36,7 +36,7 @@ public class PlayerMovementScript : MonoBehaviour
     private float input_st;
     private float input_delay = 0.27f;
     private float wait_st;
-    private float wait_time = 0.15f;
+    private float wait_time = 0.08f;
 
     public event Action OnDecision;
     public Action OnGameOver;
