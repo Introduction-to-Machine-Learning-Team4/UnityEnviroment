@@ -16,13 +16,14 @@ public class PlayerAgent : Agent
     [SerializeField]
     private float maxResetTime = 30.0f;
     [SerializeField]
-    private float penaltyRate = 0.0001f;
+    private float StayPenaltyRate = 0.0001f;
     [SerializeField]
-    private float maxPenalty = 0.01f;
-    private float DeathPenalty = 0.5f;
+    private float MaxStayPenalty = 0.001f;
+    [SerializeField]
+    private float DeathPenaltyRate = 0.8f;
+
 
     private float lastUpdateTime = 0.0f;
-
     private bool startup = false;
     private float StartUpTime = 15.0f;
     private float startTime = 0.0f;
@@ -134,19 +135,15 @@ public class PlayerAgent : Agent
         {
             case 0:
                 obj_type = 0;
-                //pad = -10.0f;
                 break;
             case 1:
                 obj_type = 1;
-                //pad = -20.0f;
                 break;
             case 2:
                 obj_type = 2;
-                //pad = -30.0f;
                 break;
             default:
                 obj_type = 0;
-                //pad = -100.0f;
                 break;
         }
         for (int j = 0; j < 3; j++) // 4 per loop, total 12
@@ -183,13 +180,14 @@ public class PlayerAgent : Agent
         if (!startup)
         {
             if (next == ACTIONS.UP)
-                reward = 0.1f;
+                reward += 0.2f;
             else if (next == ACTIONS.DOWN)
-                reward = -0.1f;
+                reward += -0.1f;
             if (Time.time - startTime > StartUpTime)
             {
                 startup = true;
                 lastUpdateTime = Time.time;
+                currentStayTime = 0;
             }
         }
         else if (reward == 1f)
@@ -198,13 +196,13 @@ public class PlayerAgent : Agent
         }
         else if (currentStayTime > maxStayTime)
         {
-            reward = -1f * penaltyRate * (currentStayTime - maxStayTime); // Penalty Increase
-            reward = reward < -1f * maxPenalty ? -1f * maxPenalty : reward; // Cap
+            var penalty = StayPenaltyRate * (currentStayTime - maxStayTime); // Penalty Increase
+            penalty = (penalty > MaxStayPenalty) ? MaxStayPenalty : penalty; // Cap
+            reward -= penalty;
         }
 
         SetReward(reward);
 
-        currentStayTime = Time.time - lastUpdateTime; // Update again on startup so that currentStayTime = 0
         if (currentStayTime > maxResetTime && startup)
         {
             EndEpisode();
@@ -271,8 +269,8 @@ public class PlayerAgent : Agent
     // Listener
     private void GameOver()
     {
-        if (DeathPenalty > 0.0f) DeathPenalty *= -1.0f;
-        SetReward(DeathPenalty);
+        float score = PMScript.GetScore();
+        SetReward(-1 * DeathPenaltyRate * score); // Penalty Increase over score
         EndEpisode();
     }
 

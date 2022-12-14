@@ -99,23 +99,31 @@ public class PlayerMovementScript : MonoBehaviour
         {
             case ACTIONS.UP:
                 successCheck = Move(new Vector3(0, 0, 3));
-                if (successCheck && (int)current.z/3 > score)
+                if (successCheck && (int)current.z/3 + 1 > score)
+                {
                     reward = 1.0f;
+                }
                 input_st = Time.time; // start the cooldown of input
                 break;
             case ACTIONS.DOWN:
                 if (Mathf.RoundToInt(current.z) > -3.0f)
-                    Move(new Vector3(0, 0, -3));
+                    successCheck = Move(new Vector3(0, 0, -3));
+                if (!successCheck)
+                    reward = -0.5f;
                 input_st = Time.time;
                 break;
             case ACTIONS.LEFT:
                 if (Mathf.RoundToInt(current.x) > minX)
-                    Move(new Vector3(-3, 0, 0));
+                    successCheck = Move(new Vector3(-3, 0, 0));
+                if (!successCheck)
+                    reward = -0.5f;
                 input_st = Time.time;
                 break;
             case ACTIONS.RIGHT:
                 if (Mathf.RoundToInt(current.x) < maxX)
-                    Move(new Vector3(3, 0, 0));
+                    successCheck = Move(new Vector3(3, 0, 0));
+                if (!successCheck)
+                    reward = -0.5f;
                 input_st = Time.time;
                 break;
             default:
@@ -266,5 +274,10 @@ public class PlayerMovementScript : MonoBehaviour
         transform.localScale = new Vector3(1, 1, 1);
         transform.rotation = Quaternion.identity;
         score = 0;
+    }
+
+    public int GetScore()
+    {
+        return score;
     }
 }
