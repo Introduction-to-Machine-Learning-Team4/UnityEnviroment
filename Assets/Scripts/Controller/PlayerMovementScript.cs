@@ -144,7 +144,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         var newPosition = current + distance;
         // Don't move if blocked by obstacle.
-        if (Physics.CheckSphere(newPosition + new Vector3(0.0f, 0.5f, 0.0f), 0.1f))
+        if (Physics.CheckSphere(newPosition + new Vector3(0.0f, 0.5f, 0.0f), 0.1f,~LayerMask.GetMask("Grid")))
             return false;
         if (newPosition.z < 3*(score - bottomline))
             return false;

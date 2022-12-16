@@ -13,6 +13,14 @@ public class LevelControllerScript : MonoBehaviour {
     public Dictionary<int, GameObject> Lines { get; private set; }
     private GameObject player;
 
+    public enum LineType
+    {
+        Others = -1,
+        Grass = 0,
+        Road = 1,
+        Water = 2,
+    };
+
     public void Start() {
         player = GameObject.FindGameObjectWithTag("Player");
         Lines = new Dictionary<int, GameObject>();
@@ -61,3 +69,4 @@ public class LevelControllerScript : MonoBehaviour {
         generated_idx = 1;
     }
 }
+

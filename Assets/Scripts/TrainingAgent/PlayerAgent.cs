@@ -4,12 +4,14 @@ using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using System.Collections.Generic;
 using ACTIONS = PlayerMovementScript.ACTIONS; // for simplicity
+using LineType = LevelControllerScript.LineType;
 
 public class PlayerAgent : Agent
 {
     public PlayerMovementScript PMScript;
     public GameStateControllerScript GSCScript;
     public LevelControllerScript LCScript;
+    public GridPlot gridScript;
 
     [SerializeField]
     private float maxStayTime = 5.0f;
@@ -55,11 +57,14 @@ public class PlayerAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // total 67
+        // total 49
+        //if (gridScript != null)
+        //    sensor.AddObservation(gridScript.GetGrid());
+
         if (PMScript != null)
             PlayerObservation(sensor); // 2
         if (LCScript != null)
-            LevelObservation(sensor); // 65
+            LevelObservation(sensor, -1, 5); // 65
 
         //string s = "(";
         //foreach (var i in sensor.GetObservations())
@@ -78,47 +83,91 @@ public class PlayerAgent : Agent
         sensor.AddObservation(PMScript.transform.position.z);
     }
 
-    private void LevelObservation(VectorSensor sensor)
+    private void LevelObservation(VectorSensor sensor, int start_idx, int line_count)
     {
         var LinesDict = LCScript.Lines;
         var start_line = (int)PMScript.transform.position.z / 3;
-        string s = "(";
-        for (int i = -1; i <= 3; i++) // 13 per loop
+        start_line = start_line + start_idx;
+        var end_line = start_line + line_count - 1;
+
+        LineTypeObservation(sensor, start_line, end_line);
+        LineObservation(sensor, start_line, end_line);
+    }
+
+    /// <summary>
+    /// Add the line type to observation
+    /// </summary>
+    /// <param name="sensor"></param>
+    /// <param name="start_line"></param>
+    /// <param name="end_line"></param>
+    private void LineTypeObservation(VectorSensor sensor,int start_line,int end_line)
+    {
+        string s = "";
+        var LinesDict = LCScript.Lines;
+        for (int current_line = start_line; current_line <= end_line; current_line++)
         {
-            int current_line = start_line + i;
             if (LinesDict.ContainsKey(current_line))
             {
-                switch (LinesDict[start_line + i].tag)
+                switch (LinesDict[current_line].tag)
                 {
                     case "Road":
                         s += "1, ";
-                        sensor.AddObservation(1); // 1
-                        var olist = LinesDict[current_line].GetComponent<RoadCarGenerator>().GetObjectsList();
-                        ObjectsObservation(sensor, olist, 1); // 12
+                        sensor.AddObservation((float)LineType.Road);
                         break;
                     case "Water":
                         s += "2, ";
-                        sensor.AddObservation(2);
-                        olist = LinesDict[current_line].GetComponent<TrunkGeneratorScript>().GetObjectsList();
-                        ObjectsObservation(sensor, olist, 2);
+                        sensor.AddObservation((float)LineType.Water);
                         break;
                     case "Grass":
                         s += "0, ";
-                        sensor.AddObservation(0);
-                        ObjectsObservation(sensor, emptyList, 0);
+                        sensor.AddObservation((float)LineType.Grass);
                         break;
                 }
             }
             else
             {
                 s += "-1, ";
-                sensor.AddObservation(-1);
-                ObjectsObservation(sensor, emptyList, -1);
-            }   
+                sensor.AddObservation((float)LineType.Others);
+            }
         }
-        s += ")\n";
         //Debug.Log(s);
     }
+    
+    /// <summary>
+    /// Add the Obstacles on the line to observation
+    /// </summary>
+    /// <param name="sensor"></param>
+    /// <param name="start_line"></param>
+    /// <param name="end_line"></param>
+    private void LineObservation(VectorSensor sensor, int start_line, int end_line)
+    {
+        var LinesDict = LCScript.Lines;
+        for (int current_line = start_line; current_line <= end_line; current_line++)
+        {
+            if (LinesDict.ContainsKey(current_line))
+            {
+                switch (LinesDict[current_line].tag)
+                {
+                    case "Road":
+                        var olist = LinesDict[current_line].GetComponent<RoadCarGenerator>().GetObjectsList();
+                        ObjectsObservation(sensor, olist, LineType.Road);
+                        break;
+                    case "Water":
+                        olist = LinesDict[current_line].GetComponent<TrunkGeneratorScript>().GetObjectsList();
+                        ObjectsObservation(sensor, olist, LineType.Water);
+                        break;
+                    case "Grass":
+                        ObjectsObservation(sensor, emptyList, LineType.Grass);
+                        break;
+                }
+            }
+            else
+            {
+                ObjectsObservation(sensor, emptyList, LineType.Others);
+            }
+        }
+    }
+
 
     /// <summary>
     /// Add the obstacles to observation.Collect x and z coordinate of object.<br/>
@@ -127,19 +176,19 @@ public class PlayerAgent : Agent
     /// </summary>
     /// <param name="sensor"></param>
     /// <param name="olist"></param>
-    private void ObjectsObservation(VectorSensor sensor,List<GameObject> olist,int LineType)
+    private void ObjectsObservation(VectorSensor sensor,List<GameObject> olist,LineType type)
     {
         float pad = -10.0f;
         float obj_type;
-        switch(LineType)
+        switch(type)
         {
-            case 0:
+            case LineType.Grass:
                 obj_type = 0;
                 break;
-            case 1:
+            case LineType.Road:
                 obj_type = 1;
                 break;
-            case 2:
+            case LineType.Water:
                 obj_type = 2;
                 break;
             default:

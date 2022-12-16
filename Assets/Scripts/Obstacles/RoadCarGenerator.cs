@@ -58,9 +58,11 @@ public class RoadCarGenerator : MonoBehaviour {
     }
 
     public void OnDestroy() {
-        foreach (var o in cars) {
-            if (o == null) continue;
-            Destroy(o);
+        var c = cars.Count;
+        for(int i = 0; i < c; i++)
+        {
+            if (cars[i] == null) continue;
+            Destroy(cars[i]);
         }
     }
 
