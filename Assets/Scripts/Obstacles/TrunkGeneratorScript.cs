@@ -57,6 +57,7 @@ public class TrunkGeneratorScript : MonoBehaviour {
 	}
 
     void OnDestroy() {
+        if (trunks == null) return;
         int c = trunks.Count;
         for(int i =0; i < c; i++)
         {

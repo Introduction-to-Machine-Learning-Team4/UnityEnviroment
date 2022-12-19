@@ -11,7 +11,6 @@ public class PlayerAgent : Agent
     public PlayerMovementScript PMScript;
     public GameStateControllerScript GSCScript;
     public LevelControllerScript LCScript;
-    public GridPlot gridScript;
 
     [SerializeField]
     private float maxStayTime = 5.0f;
@@ -31,8 +30,8 @@ public class PlayerAgent : Agent
     private float startTime = 0.0f;
 
     private List<GameObject> emptyList;
-
-    
+    private int GridSize = 7;
+    private float GridUnit = 3.0f;
     void Start()
     {
         PMScript.OnGameOver += GameOver;
@@ -58,29 +57,8 @@ public class PlayerAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // total 49
-        //if (gridScript != null)
-        //    sensor.AddObservation(gridScript.GetGrid());
-
-        if (PMScript != null)
-            PlayerObservation(sensor); // 2
         if (LCScript != null)
-            LevelObservation(sensor, -1, 5); // 65
-
-        //string s = "(";
-        //foreach (var i in sensor.GetObservations())
-        //{
-        //    s += i.ToString();
-        //    s += ", ";
-        //}
-        //s += ")";
-        //Debug.Log(s);
-
-    }
-
-    private void PlayerObservation(VectorSensor sensor)
-    {
-        sensor.AddObservation(PMScript.transform.position.x);
-        sensor.AddObservation(PMScript.transform.position.z);
+            LevelObservation(sensor, -GridSize/2, GridSize);
     }
 
     private void LevelObservation(VectorSensor sensor, int start_idx, int line_count)
@@ -90,84 +68,50 @@ public class PlayerAgent : Agent
         start_line = start_line + start_idx;
         var end_line = start_line + line_count - 1;
 
-        LineTypeObservation(sensor, start_line, end_line);
-        LineObservation(sensor, start_line, end_line);
-    }
-
-    /// <summary>
-    /// Add the line type to observation
-    /// </summary>
-    /// <param name="sensor"></param>
-    /// <param name="start_line"></param>
-    /// <param name="end_line"></param>
-    private void LineTypeObservation(VectorSensor sensor,int start_line,int end_line)
-    {
-        string s = "";
-        var LinesDict = LCScript.Lines;
+        List<float> Grid = new List<float>();
         for (int current_line = start_line; current_line <= end_line; current_line++)
         {
-            if (LinesDict.ContainsKey(current_line))
-            {
-                switch (LinesDict[current_line].tag)
-                {
-                    case "Road":
-                        s += "1, ";
-                        sensor.AddObservation((float)LineType.Road);
-                        break;
-                    case "Water":
-                        s += "2, ";
-                        sensor.AddObservation((float)LineType.Water);
-                        break;
-                    case "Grass":
-                        s += "0, ";
-                        sensor.AddObservation((float)LineType.Grass);
-                        break;
-                }
-            }
-            else
-            {
-                s += "-1, ";
-                sensor.AddObservation((float)LineType.Others);
-            }
-        }
-        //Debug.Log(s);
-    }
-    
-    /// <summary>
-    /// Add the Obstacles on the line to observation
-    /// </summary>
-    /// <param name="sensor"></param>
-    /// <param name="start_line"></param>
-    /// <param name="end_line"></param>
-    private void LineObservation(VectorSensor sensor, int start_line, int end_line)
-    {
-        var LinesDict = LCScript.Lines;
-        for (int current_line = start_line; current_line <= end_line; current_line++)
-        {
+            bool HasPlayer = ((int)PMScript.transform.position.z / 3 == current_line)? true : false;
             if (LinesDict.ContainsKey(current_line))
             {
                 switch (LinesDict[current_line].tag)
                 {
                     case "Road":
                         var olist = LinesDict[current_line].GetComponent<RoadCarGenerator>().GetObjectsList();
-                        ObjectsObservation(sensor, olist, LineType.Road);
+                        Grid.AddRange(ObjectsObservation(sensor, olist, LineType.Road, HasPlayer));
                         break;
                     case "Water":
                         olist = LinesDict[current_line].GetComponent<TrunkGeneratorScript>().GetObjectsList();
-                        ObjectsObservation(sensor, olist, LineType.Water);
+                        Grid.AddRange(ObjectsObservation(sensor, olist, LineType.Water, HasPlayer));
                         break;
                     case "Grass":
-                        ObjectsObservation(sensor, emptyList, LineType.Grass);
+                        Grid.AddRange(ObjectsObservation(sensor, emptyList, LineType.Grass, HasPlayer));
                         break;
                 }
             }
             else
             {
-                ObjectsObservation(sensor, emptyList, LineType.Others);
+                Grid.AddRange(ObjectsObservation(sensor, emptyList, LineType.Others, HasPlayer));
             }
         }
-    }
 
+        sensor.AddObservation(Grid);
+
+        string s = "\n";
+        int br = 0;
+        foreach(var val in Grid)
+        {
+            if(br == GridSize)
+            {
+                s += "\n";
+                br = 0;
+            }
+            s += val.ToString();
+            s += ", ";
+            br++;
+        }
+        //Debug.Log(s);
+    }
 
     /// <summary>
     /// Add the obstacles to observation.Collect x and z coordinate of object.<br/>
@@ -176,44 +120,68 @@ public class PlayerAgent : Agent
     /// </summary>
     /// <param name="sensor"></param>
     /// <param name="olist"></param>
-    private void ObjectsObservation(VectorSensor sensor,List<GameObject> olist,LineType type)
+    private List<float> ObjectsObservation(VectorSensor sensor,List<GameObject> olist,LineType type,bool HasPlayer)
     {
-        float pad = -10.0f;
-        float obj_type;
-        switch(type)
+        List<float> LineGrid = new List<float>();
+        float fill = (type == LineType.Water) ? 2.0f : 0.0f;
+        for (int i = 0; i < GridSize; i++)
         {
-            case LineType.Grass:
-                obj_type = 0;
-                break;
-            case LineType.Road:
-                obj_type = 1;
-                break;
-            case LineType.Water:
-                obj_type = 2;
-                break;
-            default:
-                obj_type = 0;
-                break;
+            if (HasPlayer && i == GridSize / 2)
+                LineGrid.Add(-1);
+            else
+                LineGrid.Add(fill);
         }
-        for (int j = 0; j < 3; j++) // 4 per loop, total 12
+
+        float player_x = PMScript.transform.position.x;
+        float GridBound = GridSize * GridUnit / 2.0f;
+        for (int j = 0; j < olist.Count; j++)
         {
-            if (j < olist.Count)
+
+            // Get Boundary
+            Transform BoundaryL = olist[j].transform.Find("BoundaryL"); // side on local axis
+            Transform BoundaryR = olist[j].transform.Find("BoundaryR");
+            float left = 0; // side on global axis
+            float right = 0;
+            if (BoundaryL.position.x < BoundaryR.position.x)
             {
-                Vector3 pos = olist[j].transform.position;
-                sensor.AddObservation(obj_type);
-                sensor.AddObservation(pos.x);
-                sensor.AddObservation(pos.z);
-                sensor.AddObservation(olist[j].transform.localScale.x);
+                left = BoundaryL.position.x;
+                right = BoundaryR.position.x;
             }
             else
             {
-                // padding if no objects
-                sensor.AddObservation(0);
-                sensor.AddObservation(pad + Random.Range(-0.1f,0.1f));
-                sensor.AddObservation(pad + Random.Range(-0.1f,0.1f));
-                sensor.AddObservation(pad + Random.Range(-0.1f, 0.1f));
+                left = BoundaryR.position.x;
+                right = BoundaryL.position.x;
+            }
+            left -= player_x; // Coordinate respective to player
+            right -= player_x;
+            if (right < -GridBound || left > GridBound) continue; // out of grid
+            //Debug.Log(left.ToString() + " " + right.ToString());
+
+
+            left += GridBound; // relocate to positive for easier to assign in list
+            right += GridBound;
+            left /= GridUnit; // Normalize
+            right /= GridUnit;
+            // Replace Grid Value
+            if (type == LineType.Water)
+            {
+                for (int i = Mathf.FloorToInt(left); i <= right; i++)
+                {
+                    if (i < 0 || i >= GridSize) continue;
+                    LineGrid[i] = 0;
+                }
+
+            }
+            else if(type == LineType.Road)
+            {
+                for (int i = Mathf.FloorToInt(left); i <= right; i++)
+                {
+                    if (i < 0 || i >= GridSize) continue;
+                    LineGrid[i] = 1;
+                }
             }
         }
+        return LineGrid;
     }
 
     /// <summary>

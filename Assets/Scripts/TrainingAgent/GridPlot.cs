@@ -30,7 +30,7 @@ public class GridPlot : MonoBehaviour
             }
             s += "\n";
         }
-        Debug.Log(s);
+        //Debug.Log(s);
         return grids;
     }
 }
