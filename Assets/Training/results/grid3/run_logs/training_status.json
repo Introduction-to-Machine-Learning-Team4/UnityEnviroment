@@ -1,0 +1,110 @@
+{
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 100017,
+                "file_path": "results\\grid3\\Player\\Player-100017.onnx",
+                "reward": 8.053488364746404,
+                "creation_time": 1671786718.9294176,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-100017.pt"
+                ]
+            },
+            {
+                "steps": 119985,
+                "file_path": "results\\grid3\\Player\\Player-119985.onnx",
+                "reward": 11.251401867821953,
+                "creation_time": 1671787430.9858286,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-119985.pt"
+                ]
+            },
+            {
+                "steps": 139953,
+                "file_path": "results\\grid3\\Player\\Player-139953.onnx",
+                "reward": 10.13333334076789,
+                "creation_time": 1671788062.8293436,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-139953.pt"
+                ]
+            },
+            {
+                "steps": 159989,
+                "file_path": "results\\grid3\\Player\\Player-159989.onnx",
+                "reward": 9.662826121163866,
+                "creation_time": 1671788661.644184,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-159989.pt"
+                ]
+            },
+            {
+                "steps": 179975,
+                "file_path": "results\\grid3\\Player\\Player-179975.onnx",
+                "reward": 10.934302881360054,
+                "creation_time": 1671789253.5311751,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-179975.pt"
+                ]
+            },
+            {
+                "steps": 199961,
+                "file_path": "results\\grid3\\Player\\Player-199961.onnx",
+                "reward": 7.184444424841139,
+                "creation_time": 1671789818.9251995,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-199961.pt"
+                ]
+            },
+            {
+                "steps": 200015,
+                "file_path": "results\\grid3\\Player\\Player-200015.onnx",
+                "reward": 7.463043459083723,
+                "creation_time": 1671789818.982046,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-200015.pt"
+                ]
+            },
+            {
+                "steps": 219999,
+                "file_path": "results\\grid3\\Player\\Player-219999.onnx",
+                "reward": 11.788998978435993,
+                "creation_time": 1671790488.975191,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-219999.pt"
+                ]
+            },
+            {
+                "steps": 239978,
+                "file_path": "results\\grid3\\Player\\Player-239978.onnx",
+                "reward": 9.778000009655953,
+                "creation_time": 1671791801.716494,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-239978.pt"
+                ]
+            },
+            {
+                "steps": 250014,
+                "file_path": "results\\grid3\\Player\\Player-250014.onnx",
+                "reward": 12.38499995470047,
+                "creation_time": 1671792136.1761498,
+                "auxillary_file_paths": [
+                    "results\\grid3\\Player\\Player-250014.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 250014,
+            "file_path": "results\\grid3\\Player.onnx",
+            "reward": 12.38499995470047,
+            "creation_time": 1671792136.1761498,
+            "auxillary_file_paths": [
+                "results\\grid3\\Player\\Player-250014.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.13.0"
+    }
+}

@@ -1,0 +1,110 @@
+{
+    "Player": {
+        "checkpoints": [
+            {
+                "steps": 59996,
+                "file_path": "results\\grid_7_21\\Player\\Player-59996.onnx",
+                "reward": 7.998776837093074,
+                "creation_time": 1671776947.0568326,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-59996.pt"
+                ]
+            },
+            {
+                "steps": 79969,
+                "file_path": "results\\grid_7_21\\Player\\Player-79969.onnx",
+                "reward": 7.273322274675593,
+                "creation_time": 1671778014.1109388,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-79969.pt"
+                ]
+            },
+            {
+                "steps": 99968,
+                "file_path": "results\\grid_7_21\\Player\\Player-99968.onnx",
+                "reward": 9.315789465841494,
+                "creation_time": 1671779242.6162152,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-99968.pt"
+                ]
+            },
+            {
+                "steps": 104664,
+                "file_path": "results\\grid_7_21\\Player\\Player-104664.onnx",
+                "reward": 11.749536473905513,
+                "creation_time": 1671779565.410294,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-104664.pt"
+                ]
+            },
+            {
+                "steps": 119986,
+                "file_path": "results\\grid_7_21\\Player\\Player-119986.onnx",
+                "reward": 9.112867222859128,
+                "creation_time": 1671780226.3220444,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-119986.pt"
+                ]
+            },
+            {
+                "steps": 139959,
+                "file_path": "results\\grid_7_21\\Player\\Player-139959.onnx",
+                "reward": 9.268292678565514,
+                "creation_time": 1671780841.1042032,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-139959.pt"
+                ]
+            },
+            {
+                "steps": 159960,
+                "file_path": "results\\grid_7_21\\Player\\Player-159960.onnx",
+                "reward": 12.343634552576326,
+                "creation_time": 1671781439.5392365,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-159960.pt"
+                ]
+            },
+            {
+                "steps": 179994,
+                "file_path": "results\\grid_7_21\\Player\\Player-179994.onnx",
+                "reward": 11.514884025622637,
+                "creation_time": 1671782013.204326,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-179994.pt"
+                ]
+            },
+            {
+                "steps": 199998,
+                "file_path": "results\\grid_7_21\\Player\\Player-199998.onnx",
+                "reward": 13.082447526247606,
+                "creation_time": 1671782566.6860876,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-199998.pt"
+                ]
+            },
+            {
+                "steps": 200038,
+                "file_path": "results\\grid_7_21\\Player\\Player-200038.onnx",
+                "reward": 13.008178887267908,
+                "creation_time": 1671782566.742938,
+                "auxillary_file_paths": [
+                    "results\\grid_7_21\\Player\\Player-200038.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 200038,
+            "file_path": "results\\grid_7_21\\Player.onnx",
+            "reward": 13.008178887267908,
+            "creation_time": 1671782566.742938,
+            "auxillary_file_paths": [
+                "results\\grid_7_21\\Player\\Player-200038.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.13.0"
+    }
+}

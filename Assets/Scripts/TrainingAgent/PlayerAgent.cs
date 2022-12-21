@@ -57,7 +57,7 @@ public class PlayerAgent : Agent
     {
         // total 49
         if (LCScript != null)
-            LevelObservation(sensor, -GridHeight/2, GridHeight);
+            LevelObservation(sensor, -3, GridHeight);
     }
 
     private void LevelObservation(VectorSensor sensor, int start_idx, int line_count)
@@ -133,6 +133,26 @@ public class PlayerAgent : Agent
 
         float player_x = PMScript.transform.position.x;
         float GridBound = GridWidth * GridUnit / 2.0f;
+
+        float MapMinBoundary = -8.0f;
+        float MapMaxBoundary = 7.0f;
+        //Map Boundary
+        MapMinBoundary -= player_x;
+        MapMaxBoundary -= player_x;
+        if (!(MapMinBoundary < -GridBound))
+        {
+            MapMinBoundary += GridBound;
+            MapMinBoundary /= GridUnit;
+            var GridIndex = Mathf.CeilToInt(MapMinBoundary);
+            LineGrid[GridIndex] = -2;
+        }
+        if (!(MapMaxBoundary > GridBound))
+        {
+            MapMaxBoundary += GridBound;
+            MapMaxBoundary /= GridUnit;
+            var GridIndex = Mathf.FloorToInt(MapMaxBoundary);
+            LineGrid[GridIndex] = -2;
+        }
         for (int j = 0; j < olist.Count; j++)
         {
 
@@ -164,18 +184,20 @@ public class PlayerAgent : Agent
             // Replace Grid Value
             if (type == LineType.Water)
             {
-                for (int i = Mathf.FloorToInt(left); i <= right; i++)
+                for (int i = Mathf.CeilToInt(left); i < Mathf.FloorToInt(right); i++)
                 {
                     if (i < 0 || i >= GridWidth) continue;
+                    if (LineGrid[i] == -2) continue;
                     LineGrid[i] = 0;
                 }
 
             }
             else if(type == LineType.Road)
             {
-                for (int i = Mathf.FloorToInt(left); i <= right; i++)
+                for (int i = Mathf.FloorToInt(left); i < Mathf.CeilToInt(right); i++)
                 {
                     if (i < 0 || i >= GridWidth) continue;
+                    if (LineGrid[i] == -2) continue;
                     LineGrid[i] = 1;
                 }
             }
@@ -195,10 +217,6 @@ public class PlayerAgent : Agent
         var currentStayTime = Time.time - lastUpdateTime;
         if (!startup)
         {
-            if (next == ACTIONS.UP)
-                reward += 0.2f;
-            else if (next == ACTIONS.DOWN)
-                reward += -0.1f;
             if (Time.time - startTime > StartUpTime)
             {
                 startup = true;
@@ -210,12 +228,12 @@ public class PlayerAgent : Agent
         {
             lastUpdateTime = Time.time; // Reset Timer
         }
-        else if (currentStayTime > maxStayTime)
-        {
-            var penalty = StayPenaltyRate * (currentStayTime - maxStayTime); // Penalty Increase
-            penalty = (penalty > MaxStayPenalty) ? MaxStayPenalty : penalty; // Cap
-            reward -= penalty;
-        }
+        //else if (currentStayTime > maxStayTime)
+        //{
+        //    var penalty = StayPenaltyRate * (currentStayTime - maxStayTime); // Penalty Increase
+        //    penalty = (penalty > MaxStayPenalty) ? MaxStayPenalty : penalty; // Cap
+        //    reward -= penalty;
+        //}
 
         SetReward(reward);
 
@@ -288,7 +306,8 @@ public class PlayerAgent : Agent
         float score = PMScript.GetScore();
         var penalty = DeathPenaltyRate * score; // Penalty Increase over score
         penalty = (penalty > MaxDeathPenalty) ? MaxDeathPenalty : penalty; // Cap
-        SetReward(-1 * penalty); 
+
+        SetReward(-1); 
         EndEpisode();
     }
 
