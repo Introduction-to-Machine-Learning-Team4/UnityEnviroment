@@ -16,13 +16,11 @@ public class PlayerAgent : Agent
     private float maxStayTime = 5.0f;
     [SerializeField]
     private float maxResetTime = 30.0f;
-    [SerializeField]
-    private float StayPenaltyRate = 0.0001f;
-    [SerializeField]
-    private float MaxStayPenalty = 0.001f;
-    [SerializeField]
-    private float DeathPenaltyRate = 0.8f;
 
+    private float StayPenaltyRate = 0.0001f;
+    private float MaxStayPenalty = 0.001f;
+    private float DeathPenaltyRate = 0.2f;
+    private float MaxDeathPenalty = 5.0f;
 
     private float lastUpdateTime = 0.0f;
     private bool startup = false;
@@ -30,8 +28,9 @@ public class PlayerAgent : Agent
     private float startTime = 0.0f;
 
     private List<GameObject> emptyList;
-    private int GridSize = 7;
-    private float GridUnit = 3.0f;
+    private int GridHeight = 7;
+    private int GridWidth = 21;
+    private float GridUnit = 1.0f;
     void Start()
     {
         PMScript.OnGameOver += GameOver;
@@ -58,7 +57,7 @@ public class PlayerAgent : Agent
     {
         // total 49
         if (LCScript != null)
-            LevelObservation(sensor, -GridSize/2, GridSize);
+            LevelObservation(sensor, -GridHeight/2, GridHeight);
     }
 
     private void LevelObservation(VectorSensor sensor, int start_idx, int line_count)
@@ -101,7 +100,7 @@ public class PlayerAgent : Agent
         int br = 0;
         foreach(var val in Grid)
         {
-            if(br == GridSize)
+            if(br == GridWidth)
             {
                 s += "\n";
                 br = 0;
@@ -124,16 +123,16 @@ public class PlayerAgent : Agent
     {
         List<float> LineGrid = new List<float>();
         float fill = (type == LineType.Water) ? 2.0f : 0.0f;
-        for (int i = 0; i < GridSize; i++)
+        for (int i = 0; i < GridWidth; i++)
         {
-            if (HasPlayer && i == GridSize / 2)
+            if (HasPlayer && i == GridWidth / 2)
                 LineGrid.Add(-1);
             else
                 LineGrid.Add(fill);
         }
 
         float player_x = PMScript.transform.position.x;
-        float GridBound = GridSize * GridUnit / 2.0f;
+        float GridBound = GridWidth * GridUnit / 2.0f;
         for (int j = 0; j < olist.Count; j++)
         {
 
@@ -167,7 +166,7 @@ public class PlayerAgent : Agent
             {
                 for (int i = Mathf.FloorToInt(left); i <= right; i++)
                 {
-                    if (i < 0 || i >= GridSize) continue;
+                    if (i < 0 || i >= GridWidth) continue;
                     LineGrid[i] = 0;
                 }
 
@@ -176,7 +175,7 @@ public class PlayerAgent : Agent
             {
                 for (int i = Mathf.FloorToInt(left); i <= right; i++)
                 {
-                    if (i < 0 || i >= GridSize) continue;
+                    if (i < 0 || i >= GridWidth) continue;
                     LineGrid[i] = 1;
                 }
             }
@@ -287,7 +286,9 @@ public class PlayerAgent : Agent
     private void GameOver()
     {
         float score = PMScript.GetScore();
-        SetReward(-1 * DeathPenaltyRate * score); // Penalty Increase over score
+        var penalty = DeathPenaltyRate * score; // Penalty Increase over score
+        penalty = (penalty > MaxDeathPenalty) ? MaxDeathPenalty : penalty; // Cap
+        SetReward(-1 * penalty); 
         EndEpisode();
     }
 

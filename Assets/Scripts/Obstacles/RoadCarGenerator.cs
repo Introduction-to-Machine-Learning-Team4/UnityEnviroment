@@ -23,7 +23,7 @@ public class RoadCarGenerator : MonoBehaviour {
         if (randomizeValues) {
             direction = Random.value < 0.5f ? Direction.Left : Direction.Right;
             speed = Random.Range(2.0f, 4.0f);
-            interval = Random.Range(5.0f, 9.0f);
+            interval = Random.Range(7.5f, 10.0f);
         }
 
         elapsedTime = 0.0f;
