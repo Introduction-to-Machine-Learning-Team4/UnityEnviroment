@@ -28,9 +28,9 @@ public class PlayerAgent : Agent
     private float startTime = 0.0f;
 
     private List<GameObject> emptyList;
-    private int GridHeight = 7;
-    private int GridWidth = 21;
-    private float GridUnit = 1.0f;
+    private int GridHeight = 6;
+    private int GridWidth = 15;
+    private float GridUnit = 2.0f;
     void Start()
     {
         PMScript.OnGameOver += GameOver;
@@ -57,7 +57,7 @@ public class PlayerAgent : Agent
     {
         // total 49
         if (LCScript != null)
-            LevelObservation(sensor, -GridHeight/2, GridHeight);
+            LevelObservation(sensor, -2, GridHeight);
     }
 
     private void LevelObservation(VectorSensor sensor, int start_idx, int line_count)
