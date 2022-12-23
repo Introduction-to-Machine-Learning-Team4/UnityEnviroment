@@ -1,0 +1,5 @@
+Grid Unit Size :1
+Grid Height: 7
+Grid Width: 21
+Stay Time: 5
+Reset Time: 30

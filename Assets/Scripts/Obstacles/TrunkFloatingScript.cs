@@ -56,8 +56,8 @@ public class TrunkFloatingScript : MonoBehaviour {
             playerBody = collision.gameObject.GetComponent<Rigidbody>();
 
             if (!sinking) {
-                var o = (GameObject)Instantiate(splashPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
-                o.transform.localScale = transform.localScale;
+                //var o = (GameObject)Instantiate(splashPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
+                //o.transform.localScale = transform.localScale;
 
                 sinking = true;
                 elapsedTime = 0.0f;

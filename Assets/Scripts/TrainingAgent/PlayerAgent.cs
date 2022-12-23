@@ -28,9 +28,9 @@ public class PlayerAgent : Agent
     private float startTime = 0.0f;
 
     private List<GameObject> emptyList;
-    private int GridHeight = 6;
-    private int GridWidth = 15;
-    private float GridUnit = 2.0f;
+    private int GridHeight = 7;
+    private int GridWidth = 21;
+    private float GridUnit = 1.0f;
     void Start()
     {
         PMScript.OnGameOver += GameOver;
@@ -57,7 +57,7 @@ public class PlayerAgent : Agent
     {
         // total 49
         if (LCScript != null)
-            LevelObservation(sensor, -2, GridHeight);
+            LevelObservation(sensor, -3, GridHeight);
     }
 
     private void LevelObservation(VectorSensor sensor, int start_idx, int line_count)
@@ -164,7 +164,7 @@ public class PlayerAgent : Agent
             // Replace Grid Value
             if (type == LineType.Water)
             {
-                for (int i = Mathf.FloorToInt(left); i <= right; i++)
+                for (int i = Mathf.CeilToInt(left); i < Mathf.FloorToInt(right); i++)
                 {
                     if (i < 0 || i >= GridWidth) continue;
                     LineGrid[i] = 0;
@@ -173,7 +173,7 @@ public class PlayerAgent : Agent
             }
             else if(type == LineType.Road)
             {
-                for (int i = Mathf.FloorToInt(left); i <= right; i++)
+                for (int i = Mathf.FloorToInt(left); i < Mathf.CeilToInt(right); i++)
                 {
                     if (i < 0 || i >= GridWidth) continue;
                     LineGrid[i] = 1;
@@ -195,10 +195,10 @@ public class PlayerAgent : Agent
         var currentStayTime = Time.time - lastUpdateTime;
         if (!startup)
         {
-            if (next == ACTIONS.UP)
-                reward += 0.2f;
-            else if (next == ACTIONS.DOWN)
-                reward += -0.1f;
+            //if (next == ACTIONS.UP)
+            //    reward += 0.2f;
+            //else if (next == ACTIONS.DOWN)
+            //    reward += -0.1f;
             if (Time.time - startTime > StartUpTime)
             {
                 startup = true;
